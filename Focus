@@ -1,0 +1,49 @@
+#%% Importando os dados do boletim Focus
+#!pip install python-bcb
+from bcb import Expectativas
+
+em = Expectativas()
+em.describe()
+
+# EntitySets:
+# ExpectativasMercadoTop5Anuais
+# ExpectativaMercadoMensais
+# ExpectativasMercadoInflacao24Meses
+# ExpectativasMercadoInflacao12Meses
+# ExpectativasMercadoSelic
+# ExpectativasMercadoTop5Selic
+# ExpectativasMercadoTop5Mensais
+# ExpectativasMercadoTrimestrais
+# ExpectativasMercadoAnuais
+
+
+#%% Com a informação da celula acima, conseguimos definir qual a Frequências das Expectativas de Mercado vamos extrair.
+# Coletando dados da expectativa do cambio anual.
+anual = em.get_endpoint("ExpectativasMercadoAnuais")
+Cambio = anual.query().filter(anual.Indicador == "Câmbio").collect()
+
+
+# Coletando dados da expectativa do IPCA mensal.
+mensal = em.get_endpoint("ExpectativaMercadoMensais")
+IPCAExpMensal  = mensal.query().filter(mensal.Indicador == "IPCA").collect()
+
+IPCAExpMensal.to_excel(r'C:\"endereço"\IPCAExpMensal.xlsx')
+
+#%% Indicadores disponiveis
+
+# Câmbio
+# IGP-DI
+# IGP-M
+# INPC
+# IPA-DI
+# IPA-M
+# IPCA
+# IPCA Administrados
+# IPCA Alimentação no domicílio
+# IPCA Bens industrializados
+# IPCA Livres
+# IPCA Serviços
+# IPCA-15
+# IPC-Fipe
+# Produção industrial
+# Taxa de desocupação
