@@ -1,0 +1,50 @@
+#%% Extrair os dados do Banco do Central
+# JHonatan Goncalves dos Santos
+# https://github.com/Jgonsan
+#Cada serie temporal do BC tem um codigo, com esse codigo em mÃos conseguimos baixar toda a base.
+# https://www.bcb.gov.br/
+# Estatisticas > Serires temporais > "Pesquisa textual"> Coluna: "Cod."
+#Com o codigo em mÃos, podemos seguir com o seguinte passo a passo: 
+    
+#%% Importantando os dados do site do BCB
+#Baixar toda a serie temporal.
+
+import pandas as pd
+
+def bcb(codigo):
+    link = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados?formato=json"
+    df = pd.read_json(link)
+    # Converter a coluna 'data' para datetime, informando que o dia vem primeiro
+    df['data'] = pd.to_datetime(df['data'], dayfirst=True)
+    # Definir o Ã­ndice como a coluna de datas
+    df.set_index('data', inplace=True)
+    df = df['valor']
+    return df
+
+
+
+selic = bcb(11)
+selic.to_excel(r'C:\"endereço"\selic.xlsx')
+
+selic.plot()
+
+#%% Importantando os dados do site do BCB
+#Baixar um intervalo da serie temporal.
+
+def bcb2(codigo, dataInicial, dataFinal): #Colocar  o codigo do serie, a data inicial (DD/MM/AAAA), a data final (DD/MM/AAAA).
+    link = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados?formato=json&dataInicial={dataInicial}&dataFinal={dataFinal}"
+    df = pd.read_json(link)
+    # Converter a coluna 'data' para datetime, informando que o dia vem primeiro
+    df['data'] = pd.to_datetime(df['data'], dayfirst=True)
+    # Definir o Ã­ndice como a coluna de datas
+    df.set_index('data', inplace=True)
+    df = df['valor']
+    return df
+
+selic = bcb2(11,'01/01/2010','21/09/2024') 
+selic.to_excel(r'C:\"endereço"\selic.xlsx')
+selic.plot()
+
+IPCA = bcb2(433,'01/01/2010','21/09/2024')
+IPCA.to_excel(r'C:\"endereço"\IPCA.xlsx')
+IPCA.plot()
